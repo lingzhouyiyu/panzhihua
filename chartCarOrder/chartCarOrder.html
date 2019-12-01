@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+
+	<head>
+		<title>包车订单</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link href="../common/css/mui.min.css" rel="stylesheet" />
+		<link href="../common/css/fonts/font-awesome.min.css" rel="stylesheet" />
+		<link href="../common/css/icon.css" rel="stylesheet" />
+		<link href="../common/css/ui-base.css" rel="stylesheet" />
+		<link href="../common/css/ui-box.css" rel="stylesheet" />
+		<link href="../common/css/ui-color.css" rel="stylesheet" />
+		<link href="../common/css/common.css" rel="stylesheet" />
+		<link href="../common/css/control.css" rel="stylesheet" />
+		<link href="../maincss/chartCarOrder.css" rel="stylesheet" />
+	</head>
+
+	<body class="bc-text um-vp bc-bg">
+		<div class="mui-content mui-scroll-wrapper pullrefresh">
+			<div class="ub ub-ver chartCar-list">
+
+			</div>
+			<div class="ub ub-ac ub-pc sc-text orderwarm dhide">
+				暂无订单信息！
+			</div>
+		</div>
+		<div class="orderTemp dhide">
+			<div class="ub ub ub-ver chartCar-item">
+				<div class="ub ub-ac chartCar-top marb06">
+					<div class="ub ub-ac chartCar-topLeft">
+						<div class="ub ub-ac">
+							<img class="ub ub-img order-bg" src="../common/images/chartcar.png" />
+						</div>
+						<div class="ub ub-ac">商务包车</div>
+					</div>
+
+				</div>
+				<div class="ub ub-ver chartCar-addrbox">
+					<div class="ub ub-ac">
+						<span class="ub green-circle marr06"></span>
+						<span class="ub beginAddr StartName"></span>
+					</div>
+					<div class="ub ub-ac circle-line"></div>
+					<div class="ub ub-ac marb06">
+						<span class="ub red-circle marr06"></span>
+						<span class="ub beginAddr EndName"></span>
+					</div>
+					<div class="ub ub-ac marb06">
+						<span class="ub">包车类型：</span>
+						<span class="ub beginAddr CharteredCarType">单程包车</span>
+					</div>
+					<div class="ub ub-ac sc-text CreateDate">
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+
+</html>
+<script src="../common/js/jquery-2.1.4.min.js"></script>
+<script src="../common/js/mui.min.js"></script>
+<script src="../common/js/Fsuper.js"></script>
+<script>
+	$(function() {
+		addorder();
+	});
+
+	var openId = localStorage.getItem("openid");
+
+	//下拉刷新具体业务实现
+	mui.init({
+		pullRefresh: {
+			container: '.pullrefresh',
+			down: {
+				callback: pulldownRefresh
+			}
+		}
+	});
+
+	function pulldownRefresh() {
+		setTimeout(function() {
+			$('.chartCar-list').empty();
+			addorder();
+			mui('.pullrefresh').pullRefresh().endPulldownToRefresh();
+		}, 1500);
+	}
+	//加载订单列表
+	function addorder() {
+		var postdata = {
+			openId: openId,
+		}
+		$.ajax({
+			url: api.GetCharteredCarOrderList,
+			type: "get",
+			async: false,
+			dataType: "json",
+			data: postdata,
+			success: function(result) {
+				var datas = result.resultdata;
+				var length = datas.length;
+				if (length > 0) {
+					for (var i = 0; i < length; i++) {
+						additem(datas[i]);
+					}
+				} else {
+					$(".orderwarm").removeClass("dhide");
+				}
+			},
+			error: function() {
+				mui.toast("网络错误");
+				$(".orderwarm").removeClass("dhide");
+			}
+		});
+	}
+
+	function additem(data) {
+		var list = $(".chartCar-list");
+		var OrderStatus = data.OrderStatus;
+		var item = $(".orderTemp .chartCar-item").clone();
+		item.attr("id", data.Id);
+		item.find(".StartName").text(data.StartName);
+		item.find(".EndName").text(data.EndName);
+		item.find(".CharteredCarType").text(data.CharteredCarType);
+		item.find(".CreateDate").text(data.CreateDate);
+		// item.attr('onclick', "orderDetail(this)");
+		list.append(item);
+	}
+	//绑定tap事件
+	mui(".pullrefresh").on('tap', '.orderitem', function(event) {
+		this.click();
+	});
+</script>

@@ -1,0 +1,18 @@
+.order_list{padding:0.6em 0.5em 5em 0.5em}
+.order_item{margin-bottom:.8em;padding:0 .6em .6em 1em;background:#fff}
+.order_top{padding:.6em 0 .4em 0}
+.car_bg img{width:1.4em}
+.station_line{margin-right:.4em;padding-top:5px}
+.station_line img{width:.9em}
+.order_main{padding:.5em}
+.subgoods{margin-top:.4em}
+.order_topnav{position:fixed;top:0;left:0;z-index:99;width:100%;height:2.5em;background:#fff}
+.order_nav{position:relative;font-size:.9em}
+.currnav{color:#0cabfe}
+.navline{position:absolute;bottom:0;left:0;width:100%;height:2px;background:#0cabfe;color:#0cabfe;font-size:1em}
+/**订单详情**/
+
+.chartCar-item{ background: #fff; border-radius: 5px; padding: 0.5em;  box-shadow:2px 2px 3px #aaaaaa; margin-bottom: 0.8em;}
+.order-bg{ width: 1.4em; margin-right: 0.4em;}
+.pay-btn{ height: 1.8em; border: 1px solid #00CC66; color: #00CC66; padding: 0 0.5em; border-radius: 3px; font-size: 0.9em;}
+.refund-btn{height: 1.8em; border: 1px solid #969696; color: #969696; width: 4.5em; border-radius: 3px; font-size: 0.9em;}

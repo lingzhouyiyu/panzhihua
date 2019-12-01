@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+
+	<head>
+		<title>包车</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link href="../common/css/mui.min.css" rel="stylesheet" />
+		<link href="../common/css/mui.picker.min.css" rel="stylesheet" />
+		<link href="../common/css/fonts/font-awesome.min.css" rel="stylesheet" />
+		<link href="../common/css/icon.css" rel="stylesheet" />
+		<link href="../common/css/ui-base.css" rel="stylesheet" />
+		<link href="../common/css/ui-box.css" rel="stylesheet" />
+		<link href="../common/css/ui-color.css" rel="stylesheet" />
+		<link href="../common/css/common.css" rel="stylesheet" />
+		<link href="../common/css/control.css" rel="stylesheet" />
+		<link href="../maincss/adduser.css" rel="stylesheet" />
+	</head>
+
+	<body class="bc-text um-vp bc-bg">
+		<div class="ub ub-ver" id="mainpage">
+			<div class="ub first-box">
+				<div class="ub ub-f1 ub-ver first-main">
+					<div class="ub  first-item">
+						<div class="ub ub-ac put-left marr1">
+							<div class="ub ub-ac fa fa-map-marker ft15 colgreen umar-r">
+							</div>
+							<div class="ub ub-ac">出发地</div>
+						</div>
+						<div class="ub ub-ac ub-f1 uinput">
+							<input type="text" placeholder="请输入出发地" class="StartName" />
+						</div>
+					</div>
+					<div class="ub  first-item">
+						<div class="ub ub-ac put-left marr1">
+							<div class="ub ub-ac fa fa-map-marker ft15 colred umar-r">
+							</div>
+							<div class="ub ub-ac">目的地</div>
+						</div>
+						<div class="ub ub-ac ub-f1 uinput">
+							<input type="text" placeholder="请输入目的地" class="EndName" />
+						</div>
+					</div>
+					<div class="ub  first-item">
+						<div class="ub ub-ac put-left marr1">
+							途经地点
+						</div>
+						<div class="ub ub-ac ub-f1 uinput">
+							<input type="text" placeholder="请输入途经地点" class="ViaStation" />
+						</div>
+					</div>
+					<div class="ub  first-item checkTime">
+						<div class="ub ub-ac put-left marr1">
+							用车时间
+						</div>
+						<div class="ub ub-ac ub-f1 uinput sc-text starttxt UseDate">
+							点击选择
+						</div>
+						<div class="ub ub-ac find_rightImg">
+							<img src="../common/images/icon_grayR.png" />
+						</div>
+					</div>
+					<div class="ub first-item">
+						<div class="ub ub-ac put-left">
+							用车天数
+						</div>
+						<div class="ub ub-ac ub-f1 uinput">
+							<input type="number" placeholder="请输入用车天数" class="UseDay" />
+						</div>
+					</div>
+					<div class="ub  first-item carType">
+						<div class="ub ub-ac put-left marr1">
+							车辆类型
+						</div>
+						<div class="ub ub-ac ub-f1 uinput sc-text carTypetxt CarType">
+							点击选择
+						</div>
+						<div class="ub ub-ac find_rightImg">
+							<img src="../common/images/icon_grayR.png" />
+						</div>
+					</div>
+					<div class="ub  first-item CharteredCarType">
+						<div class="ub ub-ac put-left marr1">
+							包车类型
+						</div>
+						<div class="ub ub-ac ub-f1 uinput sc-text CharteredCarTypetxt">
+							点击选择
+						</div>
+						<div class="ub ub-ac find_rightImg">
+							<img src="../common/images/icon_grayR.png" />
+						</div>
+					</div>
+					<div class="ub first-item">
+						<div class="ub ub-ac put-left">
+							姓名
+						</div>
+						<div class="ub ub-ac ub-f1 uinput">
+							<input type="text" placeholder="请输入联系人姓名" class="UserName" />
+						</div>
+					</div>
+					<div class="ub first-item">
+						<div class="ub ub-ac put-left">
+							联系电话
+						</div>
+						<div class="ub ub-ac ub-f1 uinput">
+							<input type="tel" placeholder="请输入联系电话" class="UserPhone" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ub btn_box">
+				<div class="ub ub-f1 ub-ac ub-pc main_btn sendbtn">
+					提交信息
+				</div>
+			</div>
+	</body>
+
+</html>
+<script src="../common/js/jquery-2.1.4.min.js"></script>
+<script src="../common/js/mui.min.js"></script>
+<script src="../common/js/mui.picker.min.js"></script>
+<script src="../common/js/Fsuper.js"></script>
+<script>
+	$(function() {
+
+	});
+
+	var openId = localStorage.getItem("openid");
+	var UserId = localStorage.getItem("UserId");
+	var carTypeTxt, startTimeTxt, CharteredCarTypetxt;
+	$('.checkTime').on('click', function() {
+		var timepicker = new mui.DtPicker({
+			type: 'date',
+			beginDate: new Date()
+		});
+		timepicker.show(function(item) {
+			$('.starttxt').text(item);
+			startTimeTxt = item.value;
+			$('.starttxt').css('color', '#5d5d5d');
+		})
+	})
+
+	$('.carType').on('click', function() {
+		var carType = [{
+			value: '商务车',
+			text: '商务车'
+		}, {
+			value: '专车',
+			text: '专车'
+		}, {
+			value: '大巴车',
+			text: '大巴车'
+		}];
+		var picker = new mui.PopPicker();
+		picker.setData(carType);
+		$('.poptitle').text('车辆类型');
+		picker.show(function(item) {
+			$('.carTypetxt').text(item[0].text);
+			$('.carTypetxt').css('color', '#5d5d5d');
+			carTypeTxt = item[0].text;
+		})
+	});
+	$('.CharteredCarType').on('click', function() {
+		var carType = [{
+			value: '单程',
+			text: '单程'
+		}, {
+			value: '往返',
+			text: '往返'
+		}];
+		var picker = new mui.PopPicker();
+		picker.setData(carType);
+		$('.poptitle').text('车辆类型');
+		picker.show(function(item) {
+			$('.CharteredCarTypetxt').text(item[0].text);
+			$('.CharteredCarTypetxt').css('color', '#5d5d5d');
+			CharteredCarTypetxt = item[0].text;
+		})
+	});
+
+	// 提交订单
+	function CreateCharteredCarOrder() {
+		var StartName = $('.StartName').val();
+		var EndName = $('.EndName').val();
+		var ViaStation = $('.ViaStation').val();
+		var UseDay = $('.UseDay').val();
+		var UseDate = $.trim($('.UseDate').text());
+		var CarType = $.trim($('.CarType').text());
+		var CharteredCarType = $.trim($('.CharteredCarTypetxt').text());
+		var UserName = $('.UserName').val();
+		var UserPhone = $('.UserPhone').val();
+		if (StartName == null || StartName == '' || EndName == null || EndName == '' || UserPhone == null || UserPhone == '') {
+			mui.toast('请填完必填项信息！');
+			return;
+		}
+		if (UseDate == null || UseDate == '' || UseDate == '点击选择') {
+			mui.toast('请选择用车时间！');
+			return;
+		}
+		var postdata = {
+			OpenId: openId,
+			UserId: UserId,
+			StartName: StartName,
+			EndName: EndName,
+			ViaStation: ViaStation,
+			PeopleNum: 1,
+			UseDay: UseDay,
+			UseDate: UseDate,
+			CarType: CarType,
+			CharteredCarType: CharteredCarType,
+			UserName: UserName,
+			UserPhone: UserPhone,
+		}
+		// console.log(postdata);
+		$.ajax({
+			url: api.CreateCharteredCarOrder,
+			type: "POST",
+			async: false,
+			dataType: "json",
+			data: {
+				queryJson: JSON.stringify(postdata)
+			},
+			success: function(result) {
+				if (result.type == 1) {
+					mui.alert(result.message, '系统提示', function() {
+						mui.openWindow({
+							url: '../chartCarOrder/chartCarOrder.html'
+						});
+					});
+				} else {
+					mui.alert(result.message, '系统提示', function() {
+
+					});
+				}
+			}
+		});
+	}
+
+	//打开绑定手机
+	$(".sendbtn").on("click", function() {
+		CreateCharteredCarOrder();
+	})
+</script>

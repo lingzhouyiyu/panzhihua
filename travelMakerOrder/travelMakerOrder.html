@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+
+	<head>
+		<title>确认订单</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link href="../common/css/mui.min.css" rel="stylesheet" />
+		<link href="../common/css/mui.picker.min.css" rel="stylesheet" />
+		<link href="../common/css/fonts/font-awesome.min.css" rel="stylesheet" />
+		<link href="../common/css/icon.css" rel="stylesheet" />
+		<link href="../common/css/ui-base.css" rel="stylesheet" />
+		<link href="../common/css/ui-box.css" rel="stylesheet" />
+		<link href="../common/css/ui-color.css" rel="stylesheet" />
+		<link href="../common/css/common.css" rel="stylesheet" />
+		<link href="../common/css/control.css" rel="stylesheet" />
+		<link href="../maincss/travel.css" rel="stylesheet" />
+	</head>
+
+	<body class="bc-text um-vp bc-bg">
+		<div class="ub travelLine-item">
+			<div class="ub ub-ac product-leftimg">
+				<img class="ub ub-img product-img PlanImg" src="../common/images/product.jpg" />
+			</div>
+			<div class="ub ub-f1 ub-ver">
+				<div class="ub PlanName txthide2">
+
+				</div>
+				<div class="ub ub-ac ub-f1 ub-ae">
+					<div class="ub ub-ac ub-f1 colred">
+						<span class="ft09">￥</span>
+						<span class="ft15 Fprice PresentPrice">0</span>
+					</div>
+					<div class="ub ub-ae sc-text">
+						<span>x</span>
+						<span class="last-num">1</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ub  first-item first-item02">
+			<div class="ub ub-ac put-left ub-f1 marr1">
+				出游人数
+			</div>
+			<div class="ub ub-ac">
+				<div class="ub buycontral">
+					<div class="ub ub-ac ub-pc ft125 ctrlL pro-reduce" onclick="reducegoods(this)">
+						-
+					</div>
+					<div class="ub ub-ac ub-pc uinput ctrlNum">
+						<input class="pro-num" id="putnum" type="number" value="1" onclick="inputclick(this)" />
+					</div>
+					<div class="ub ub-ac ub-pc ft125 ctrlR pro-add" onclick="addgoods(this)">
+						+
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ub  first-item checkTime">
+			<div class="ub ub-ac put-left marr1">
+				出游时间
+			</div>
+			<div class="ub ub-ac ub-f1 uinput sc-text starttxt">
+				点击选择
+			</div>
+			<div class="ub ub-ac find_rightImg">
+				<img src="../common/images/icon_grayR.png" />
+			</div>
+		</div>
+		<div class="ub first-item">
+			<div class="ub ub-ac put-left">
+				联系人姓名
+			</div>
+			<div class="ub ub-ac ub-f1 uinput">
+				<input type="text" placeholder="请输入联系人姓名" class="ContactName" />
+			</div>
+		</div>
+		<div class="ub first-item">
+			<div class="ub ub-ac put-left">
+				联系电话
+			</div>
+			<div class="ub ub-ac ub-f1 uinput">
+				<input type="tel" placeholder="请输入联系电话" class="ContactPhone" />
+			</div>
+		</div>
+		<div class="ub ub-ac buyfooter">
+			<div class="ub ub-pc ub-f1">
+				<span>合计：</span>
+				<span class="colgloden">￥</span><span class="colgloden ft125 countmoey">0</span>
+			</div>
+			<div class="ub ub-f1 ub-pc ub-ac buybtn">提交订单</div>
+		</div>
+
+	</body>
+
+</html>
+<script src="../common/js/jquery-2.1.4.min.js"></script>
+<script src="../common/js/mui.min.js"></script>
+<script src="../common/js/mui.picker.min.js"></script>
+<script src="../common/js/Fsuper.js"></script>
+<script>
+	$(function() {
+		travelLineDetail();
+	});
+
+	var openId = localStorage.getItem("openid");
+	var travelLineid = localStorage.getItem("travelLineid");
+	var UserId = localStorage.getItem("UserId");
+
+	function travelLineDetail() {
+		var parm = {
+			planId: travelLineid
+		}
+		$.ajax({
+			url: api.travelLineDetail,
+			type: "GET",
+			async: false,
+			dataType: "json",
+			data: parm,
+			success: function(result) {
+				var datas = result.resultdata;
+				var PlanImg = datas.PlanImg;
+				$(".PlanName").text(datas.PlanName);
+				$(".PresentPrice").text(datas.PresentPrice);
+				$(".countmoey").text(datas.PresentPrice);
+				$(".PlanImg").attr("src", Serverurl + PlanImg);
+			},
+			error: function() {
+
+			}
+		});
+	}
+
+
+	$('.checkTime').on('click', function() {
+		var now = new Date();
+		var year = now.getFullYear();
+		var month = now.getMonth() + 1;
+		var day = now.getDate()+1;
+
+		if (month < 10) {
+			month = '0' + month;
+		}
+		if (day < 10) {
+			day = '0' + day;
+		}
+		var timepicker = new mui.DtPicker({
+			type: 'date',
+			beginDate: new Date(year,month,day)
+		});
+		timepicker.show(function(item) {
+			$('.starttxt').text(item);
+			startTimeTxt = item.value;
+			$('.starttxt').css('color', '#5d5d5d');
+		})
+	})
+
+
+	//商品加减
+	var num = "";
+	var cartId, ShopCartGoodsId, GoodsNumber, itemprice, GoodsId;
+	//监测输入框
+	document.getElementById('putnum').addEventListener('input', function(e) {
+		var curval = $('.pro-num').val();
+		var curprice = $('.Fprice').text();
+		if (curval.length == 1) {
+			curval = curval.replace(/[^1-9]/g, '');
+			$('.pro-num').val(curval);
+		} else if ((curval == 0)) {
+			$('.pro-num').val(1);
+			curval = 1;
+		} else if (curval == "") {
+			$('.pro-num').val(1);
+			curval = 1;
+		} else {
+			curval = curval.replace(/\D/g, '');
+			$('.pro-num').val(curval);
+		}
+		$('.last-num').html(curval);
+		GoodsNumber = curval;
+		itemprice = curprice * curval;
+		$('.countmoey').text(itemprice);
+	});
+
+	//添加商品数量
+	function addgoods(dom) {
+		var goods_num = $('.pro-num');
+		var curprice = $('.Fprice').text();
+		curprice = parseFloat(curprice);
+		num = $(goods_num).val();
+		num++;
+		goods_num.val(num); //增加后商品数量
+		$('.last-num').text(num);
+		GoodsNumber = num;
+		itemprice = curprice * num;
+		$('.countmoey').text(itemprice);
+
+	}
+
+	//减少商品数量
+	function reducegoods(dom) {
+		var goods_num = $('.pro-num');
+		num = $(goods_num).val();
+		var curprice = $('.Fprice').text();
+		curprice = parseFloat(curprice);
+		if (num > 0) {
+			if (num == 1) {
+				goods_num.val(1);
+			} else {
+				num--;
+				goods_num.val(num);
+			}
+			$('.last-num').text(num);
+			GoodsNumber = num;
+			itemprice = curprice * num;
+			$('.countmoey').text(itemprice);
+		}
+	}
+
+	//提交订单
+	//支付数据提交
+	function payadata() {
+		var UseDate = $(".starttxt").text();
+		var PeopleNum = $('.pro-num').val();
+		var ContactName = $('.ContactName').val();
+		var ContactPhone = $('.ContactPhone').val();
+		var parm = {
+			PlanId: travelLineid,
+			UseDate: UseDate,
+			PeopleNum: PeopleNum,
+			ContactName: ContactName,
+			ContactPhone: ContactPhone,
+			OpenId: openId,
+			UserId: UserId,
+
+		}
+		console.log(parm);
+		$.ajax({
+			url: api.travelMakerOrder,
+			type: "POST",
+			async: false,
+			dataType: "json",
+			data: {
+				queryJson: JSON.stringify(parm)
+			},
+			timeout: 5000,
+			success: function(data) {
+				var msg = data.message;
+				var type = data.type;
+				if (type == 3) {
+					mui.toast(msg, '系统提示');
+					//getseatinfor(); 
+					//refresh();
+					return false;
+				}
+				var appId = data.resultdata.appId;
+				var timeStamp = data.resultdata.timeStamp;
+				var nonceStr = data.resultdata.nonceStr;
+				var package = data.resultdata.package;
+				var paySign = data.resultdata.paySign;
+				var signature = data.resultdata.signature;
+				var msg = data.message;
+				var type = data.type;
+				var code = data.resultdata.code;
+				var OrderCode = data.resultdata.orderId;
+				localStorage.setItem("OrderCode", OrderCode);
+				//alert(OrderCode);
+				if (code == 200) {
+					WeixinJSBridge.invoke('getBrandWCPayRequest', {
+						"appId": appId, //公众号名称，由商户传入
+						"timeStamp": timeStamp, //时间戳
+						"nonceStr": nonceStr, //随机串
+						"package": package, //扩展包
+						"signType": "MD5", //微信签名方式:1.MD5
+						"paySign": paySign //微信签名
+					}, function(res) {
+						if (res.err_msg == "get_brand_wcpay_request:ok") {
+							mui.alert('支付成功！', '系统提示');
+							mui.openWindow({
+								url: '../travelOrder/travelOrder.html?v=1.0.1',
+								id: 'travelOrder',
+							});
+						} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
+							mui.openWindow({
+								url: '../travelOrder/travelOrder.html?v=1.0.1',
+								id: 'travelOrder',
+							});
+						} else {
+							alert(JSON.stringify(res));
+						}
+						mui.openWindow({
+							url: '../travelOrder/travelOrder.html?v=1.0.1',
+							id: 'travelOrder',
+						});
+						return;
+					});
+				}
+			}
+
+		});
+	}
+
+	//支付按钮
+	$(".buybtn").click(function() {
+		var UseDate = $.trim($(".starttxt").text());
+		var ContactName = $.trim($('.ContactName').val());
+		var ContactPhone = $.trim($('.ContactPhone').val());
+		if (UseDate == '点击选择') {
+			mui.toast('请选择出游时间！');
+			return;
+		}
+		if (ContactName == '' || ContactName == null) {
+			mui.toast('请填写联系人姓名！');
+			return;
+		}
+		if (ContactPhone == '' || ContactPhone == null) {
+			mui.toast('请填写联系电话！');
+			return;
+		}
+		payadata();
+	});
+</script>

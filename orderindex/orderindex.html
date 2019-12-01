@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+
+	<head>
+		<title>添加乘客</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link rel="stylesheet" href="../common/css/mui.min.css" />
+		<link rel="stylesheet" href="../common/css/fonts/font-awesome.min.css">
+		<link rel="stylesheet" href="../common/css/idangerous.swiper.css" />
+		<link rel="stylesheet" href="../common/css/icon.css" />
+		<link rel="stylesheet" href="../common/css/ui-base.css" />
+		<link rel="stylesheet" href="../common/css/ui-box.css" />
+		<link rel="stylesheet" href="../common/css/ui-color.css" />
+		<link rel="stylesheet" href="../common/css/common.css" />
+		<link rel="stylesheet" href="../common/css/control.css" />
+		<link rel="stylesheet" href="css/orderindex.css" />
+	</head>
+
+	<body class="bc-text um-vp bc-bg">
+		<div class="ub ub-ac orderindex-item goorder01">
+			<div class="ub ub-ac orderitem-left">
+				<div class="ub ub-ac item-img">
+					<img src="../common/images/index_nav04.png" />
+				</div>
+				<div class="ub ub-ac">
+					大巴购票订单
+				</div>
+			</div>
+			<div class="ub ub-f1 ub-pe">
+				<div class="ub ft15 fa sc-text fa-angle-right"></div>
+			</div>
+		</div>
+		<div class="ub ub-ac orderindex-item goorder02">
+			<div class="ub ub-ac orderitem-left">
+				<div class="ub ub-ac item-img">
+					<img src="../common/images/index_nav01.png" />
+				</div>
+				<div class="ub ub-ac">
+					商务包车订单
+				</div>
+			</div>
+			<div class="ub ub-f1 ub-pe">
+				<div class="ub ft15 fa sc-text fa-angle-right"></div>
+			</div>
+		</div>
+		<div class="ub ub-ac orderindex-item goorder03">
+			<div class="ub ub-ac orderitem-left">
+				<div class="ub ub-ac item-img">
+					<img src="../common/images/index_nav02.png" />
+				</div>
+				<div class="ub ub-ac">
+					学生出行订单
+				</div>
+			</div>
+			<div class="ub ub-f1 ub-pe">
+				<div class="ub ft15 fa sc-text fa-angle-right"></div>
+			</div>
+		</div>
+		<div class="ub ub-ac orderindex-item goorder04">
+			<div class="ub ub-ac orderitem-left">
+				<div class="ub ub-ac item-img">
+					<img src="../common/images/index_nav03.png" />
+				</div>
+				<div class="ub ub-ac">
+					旅游套票订单
+				</div>
+			</div>
+			<div class="ub ub-f1 ub-pe">
+				<div class="ub ft15 fa sc-text fa-angle-right"></div>
+			</div>
+		</div>
+		<!--底部-->
+		<div class="ub  footer01">
+			<div class="ub ub-ac ub-pc ub-ver ub-f1 ub-fh" onclick="goindex()">
+				<div class="ub ub-ac ub-pc footer_box01">
+					<img class="ub ub-img footer_img" src="../common/images/foot01.png" />
+				</div>
+				<div class="ub sc-text ft085">首页</div>
+			</div>
+			<div class="ub ub-ac ub-pc ub-ver ub-f1 ub-fh" onclick="goorders()">
+				<div class="ub ub-ac ub-pc footer_box01">
+					<img class="ub ub-img footer_img" src="../common/images/foot02_active.png" />
+				</div>
+				<div class="ub colblue ft085">订单</div>
+			</div>
+			<div class="ub ub-ac ub-pc ub-ver ub-f1 ub-fh" onclick="goperson()">
+				<div class="ub ub-ac ub-pc footer_box01">
+					<img class="ub ub-img footer_img" src="../common/images/foot03.png" />
+				</div>
+				<div class="ub sc-text ft085 ">个人中心</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../common/js/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="../common/js/mui.min.js"></script>
+	<script type="text/javascript" src="../common/js/Fsuper.js"></script>
+	<script type="text/javascript">
+		$(function() {
+
+		});
+		var openid = localStorage.getItem("openid");
+		$(".goorder01").click(function() {
+			mui.openWindow({
+				url: '../orders/orders.html',
+				id: 'orders',
+			});
+		});
+		$(".goorder02").click(function() {
+			mui.openWindow({
+				url: '../chartCarOrder/chartCarOrder.html',
+				id: 'orders',
+			});
+		});
+		$(".goorder03").click(function() {
+			mui.openWindow({
+				url: '../studentOrder/studentOrder.html',
+				id: 'orders',
+			});
+		});
+		$(".goorder04").click(function() {
+			mui.openWindow({
+				url: '../travelOrder/travelOrder.html',
+				id: 'orders',
+			});
+		});
+	</script>
+
+</html>

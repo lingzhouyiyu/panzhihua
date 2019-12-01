@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+
+	<head>
+		<title>旅游套票订单</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link href="../common/css/mui.min.css" rel="stylesheet" />
+		<link href="../common/css/fonts/font-awesome.min.css" rel="stylesheet" />
+		<link href="../common/css/icon.css" rel="stylesheet" />
+		<link href="../common/css/ui-base.css" rel="stylesheet" />
+		<link href="../common/css/ui-box.css" rel="stylesheet" />
+		<link href="../common/css/ui-color.css" rel="stylesheet" />
+		<link href="../common/css/common.css" rel="stylesheet" />
+		<link href="../common/css/control.css" rel="stylesheet" />
+		<link href="../maincss/studentOrder.css" rel="stylesheet" />
+
+	</head>
+
+	<body class="bc-text um-vp bc-bg">
+		<div class="ub order_topnav dhide">
+			<div class="ub ub-ac ub-pc ub-f1 ub-fh order_nav currnav">
+				<div class="ub">全部</div>
+				<div class="ub  navline"></div>
+			</div>
+			<div class="ub ub-ac ub-pc ub-f1 ub-fh order_nav">
+				<div class="ub">待付款</div>
+			</div>
+			<div class="ub ub-ac ub-pc ub-f1 ub-fh order_nav">
+				<div class="ub">待出行</div>
+			</div>
+		</div>
+		<div class="mui-content mui-scroll-wrapper pullrefresh">
+			<div class="ub ub-ver order_list">
+
+			</div>
+		</div>
+		<!--脚部-->
+		<div class="ub footer dhide">
+			<div class="ub ub-ver ub-ac ub-pc ub-f1 ub-fh" onclick="goindex()">
+				<div class="ub footer_img">
+					<img src="../common/images/foot01.png" />
+					<img class="dhide" src="../common/images/foot01_active.png" />
+				</div>
+				<div class="ub ft085 col999">首页</div>
+			</div>
+			<div class="ub ub-ver ub-ac ub-pc ub-f1 ub-fh" onclick="goorders()">
+				<div class="ub footer_img">
+					<img class="dhide" src="../common/images/foot02.png" />
+					<img src="../common/images/foot02_active.png" />
+				</div>
+				<div class="ub ft085 colblue">订单</div>
+			</div>
+			<div class="ub ub-ver ub-ac ub-pc ub-f1 ub-fh" onclick="goperson()">
+				<div class="ub footer_img">
+					<img src="../common/images/foot03.png" />
+					<img class="dhide" src="../common/images/foot03_active.png" />
+				</div>
+				<div class="ub ft085 col999">个人</div>
+			</div>
+		</div>
+		<div class="ordertemp dhide">
+			<div class="ub ub ub-ver chartCar-item">
+				<div class="ub ub-ac chartCar-top marb06">
+					<div class="ub ub-ac ub-f1 chartCar-topLeft">
+						<div class="ub ub-ac">
+							<img class="ub ub-img order-bg" src="../common/images/travle-bg.png" />
+						</div>
+						<div class="ub ub-ac">旅游套票</div>
+					</div>
+					<div class="ub ub-ac OrderStatus colred"></div>
+				</div>
+				<div class="ub ub-f1">
+					<div class="ub ub-ver ub-f1 chartCar-addrbox">
+						<div class="ub ub-ac PlanName marb06">
+
+						</div>
+						<div class="ub ub-ac marb06">
+							<span class="ub">人数：</span>
+							<span class="ub PeopleNum">0</span>
+							<span>人</span>
+						</div>
+						<div class="ub ub-ac marb06">
+							<span class="ub">出游日期：</span>
+							<span class="ub UseDate">2019-09-09</span>
+						</div>
+						<div class="ub ub-ac marb06">
+							<span class="ub">成团状态：</span>
+							<span class="ub colgop GroupStatus">处理中</span>
+						</div>
+						<div class="ub ub-ac sc-text CreateDate">
+							2019-09-09 20:00
+						</div>
+					</div>
+					<div class="ub ub-ver">
+						<div class="ub ub-pe ub-f1 ub-ac  colred">
+							<span>￥</span>
+							<span class="OrderPrice">0</span>
+						</div>
+						<div class="ub ub-ac ub-pe contral-btn">
+							<div class="ub ub-ac ub-pc pay-btn dhide">
+								立即支付
+							</div>
+							<div class="ub ub-ac ub-pc refund-btn dhide">
+								退款
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+
+</html>
+<script src="../common/js/jquery-2.1.4.min.js"></script>
+<script src="../common/js/mui.min.js"></script>
+<script src="../common/js/Fsuper.js"></script>
+<script>
+	$(function() {
+		addorder();
+	});
+
+	//订单头部导航点击
+	$(".order_nav").click(function() {
+		var navwidth = $(this).width();
+		var xx = $(this).offset().left;
+		var x = $(this).index() * navwidth;
+		$(".order_nav").removeClass("currnav");
+		$(this).addClass("currnav");
+		$(".navline").animate({
+			"marginLeft": x,
+		}, 150);
+	});
+
+	var openId = localStorage.getItem("openid");
+
+	//下拉刷新具体业务实现
+	mui.init({
+		pullRefresh: {
+			container: '.pullrefresh',
+			down: {
+				callback: pulldownRefresh
+			}
+		}
+	});
+
+	function pulldownRefresh() {
+		setTimeout(function() {
+			$('.order_list').empty();
+			addorder();
+			mui('.pullrefresh').pullRefresh().endPulldownToRefresh();
+		}, 1500);
+	}
+	//加载订单列表
+	function addorder() {
+		var postdata = {
+			openId: openId,
+		}
+		$.ajax({
+			url: api.travelOrder,
+			type: "get",
+			async: false,
+			dataType: "json",
+			data: postdata,
+			success: function(result) {
+				var datas = result.resultdata;
+				var length = datas.length;
+				if (length > 0) {
+					for (var i = 0; i < length; i++) {
+						additem(datas[i]);
+					}
+				} else {
+					$(".orderwarm").removeClass("dhide");
+				}
+			},
+			error: function() {
+				mui.toast("网络错误");
+				$(".orderwarm").removeClass("dhide");
+			}
+		});
+	}
+
+	function additem(data) {
+		var list = $(".order_list");
+		var OrderStatus = data.OrderStatus;
+		var item = $(".ordertemp .chartCar-item").clone();
+		var GroupStatus = data.GroupStatus;
+		item.attr("id", data.Id);
+		item.find(".PlanName").text(data.PlanName);
+		item.find(".OrderPrice").text(data.OrderPrice);
+		item.find(".CreateDate").text(data.CreateDate);
+		item.find(".UseDate").text(data.UseDate);
+		item.find(".PeopleNum").text(data.PeopleNum);
+
+		// item.attr('onclick', "orderDetail(this)");
+		if (GroupStatus == 0) {
+			item.find(".GroupStatus").text('处理中');
+		}
+		if (GroupStatus == 1) {
+			item.find(".GroupStatus").text('已成团');
+		}
+		if (GroupStatus == 2) {
+			item.find(".GroupStatus").text('未成团');
+		}
+		if (OrderStatus == 0) {
+			item.find(".OrderStatus").text('待支付');
+			item.find(".pay-btn").removeClass('dhide');
+		}
+		if (OrderStatus == 1) {
+			item.find(".OrderStatus").text('已支付');
+		}
+		if (OrderStatus == 2) {
+			item.find(".OrderStatus").text('已退款');
+		}
+		if (OrderStatus == -1) {
+			item.find(".OrderStatus").text('已取消');
+		}
+		if (OrderStatus == 1 && GroupStatus == 0) {
+			item.find(".refund-btn").removeClass('dhide');
+		}
+		item.find('.pay-btn').attr('onclick', "payorder(this)");
+		item.find('.refund-btn').attr('onclick', "refund(this)");
+		list.append(item);
+	}
+	//订单支付
+	function payorder(dom) {
+		var orderId = $(dom).closest('.chartCar-item').attr('id');
+		var postdata = {
+			orderId: orderId
+		}
+		console.log(postdata);
+		$.ajax({
+			url: api.LytpTunePay,
+			type: "GET",
+			async: false,
+			dataType: "json",
+			data: postdata,
+			success: function(result) {
+				if (result.type == 1) {
+					var appId = result.resultdata.appId;
+					var timeStamp = result.resultdata.timeStamp;
+					var nonceStr = result.resultdata.nonceStr;
+					var package = result.resultdata.package;
+					var paySign = result.resultdata.paySign;
+					var code = result.resultdata.code;
+					if (code == 200) {
+						WeixinJSBridge.invoke('getBrandWCPayRequest', {
+							"appId": appId, //公众号名称，由商户传入
+							"timeStamp": timeStamp, //时间戳
+							"nonceStr": nonceStr, //随机串
+							"package": package, //扩展包
+							"signType": "MD5", //微信签名方式:1.MD5
+							"paySign": paySign //微信签名
+						}, function(res) {
+							if (res.err_msg == "get_brand_wcpay_request:ok") {
+								mui.alert('支付成功！', '系统提示');
+								refresh();
+							} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
+								return;
+							} else {
+								alert(JSON.stringify(res));
+							}
+						});
+					}
+				} else {
+					mui.alert(result.message, '系统提示');
+					return;
+				}
+
+			}
+
+		});
+	}
+
+	function refund(dom) {
+		var rulemsg = "";
+		var type = "";
+		var dbOrderId = $(dom).closest('.chartCar-item').attr('id');
+		var senddata = {
+			orderId: dbOrderId
+		}
+		$.ajax({
+			url: api.RefundRuleTouristTicketOrder,
+			type: "get",
+			async: false,
+			dataType: "json",
+			data: senddata,
+			success: function(result) {
+				rulemsg = result.message;
+				type = result.type;
+			}
+		});
+		if (type == 3) {
+			mui.alert(rulemsg, '系统提示');
+			return;
+		}
+		var btnArray = ['否', '是'];
+		mui.confirm(rulemsg, '系统提示', btnArray, function(e) {
+			if (e.index == 1) {
+				$.ajax({
+					url: api.RefundTouristTicketOrder,
+					type: "get",
+					async: false,
+					dataType: "json",
+					data: senddata,
+					success: function(result) {
+						var type = result.type;
+						var msg = result.message;
+						if (type == 1) {
+							mui.alert(msg, '系统提示', function() {
+								refresh();
+							});
+						}
+						if (type == 3) {
+							mui.alert(msg, '系统提示');
+							return;
+						}
+					}
+
+				});
+			} else {
+				return;
+			}
+		})
+	}
+
+	//绑定tap事件
+	mui(".pullrefresh").on('tap', '.pay-btn', function(event) {
+		this.click();
+	});
+	mui(".pullrefresh").on('tap', '.refund-btn', function(event) {
+		this.click();
+	});
+</script>

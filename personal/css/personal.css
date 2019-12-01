@@ -1,0 +1,13 @@
+.service-top{background: #0396ff url(../../common/images/btn-bg.jpg) repeat-y; background-size: 100% 100%;  padding:1.2em 0; }
+.code-img{ width: 1.5em;}
+.service-top{ padding: 2em 0.6em 8em 0.6em; color: #fff;}
+.navbox{ padding: 0 0.5em; margin-top: -4em;}
+.main-nav{ background: #fff; border-radius: 8px; padding:2em 0.5em;  box-shadow:2px 2px 3px #aaaaaa;}
+.nav-img{ width: 3.6em;}
+.header_box{border: 2px solid #79dff8; width: 89px; height: 89px;  border-radius: 50%; margin-top: -60px; background: #fff; margin-bottom: 1.5em;}
+.logo_img{ width: 80px; height: 80px; border-radius: 50%;  }
+
+.person_list{ padding: 1em 0.5em 3.2em 0.5em;}
+.person_item{ background: #fff; padding:0.6em; border-radius: 5px;}
+.border_b{ border-bottom: 1px solid #efefef;}
+.person_img img{ width: 1.3em; margin-right: 0.8em;}

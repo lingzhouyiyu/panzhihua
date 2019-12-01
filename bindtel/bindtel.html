@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+
+	<head>
+		<title>绑定手机号</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link rel="stylesheet" href="../common/css/mui.min.css" />
+		<link rel="stylesheet" href="../common/css/fonts/font-awesome.min.css">
+		<link rel="stylesheet" href="../common/css/idangerous.swiper.css" />
+		<link rel="stylesheet" href="../common/css/icon.css" />
+		<link rel="stylesheet" href="../common/css/ui-base.css" />
+		<link rel="stylesheet" href="../common/css/ui-box.css" />
+		<link rel="stylesheet" href="../common/css/ui-color.css" />
+		<link rel="stylesheet" href="../common/css/common.css" />
+		<link rel="stylesheet" href="../common/css/control.css" />
+		<link rel="stylesheet" href="css/bindtel.css" />
+	</head>
+
+	<body class="bc-text um-vp bc-bg">
+		<div class="ub ub-ac edit_warn">
+			<div class="ub ub-ac editwarn_img">
+				<img class="ub ub-img umar-r" src="../common/images/warn_img.png" />
+			</div>
+			<div class="ub sc-text ft085">绑定手机号，为您提供更优质的出行服务！</div>
+		</div>
+		<div class="ub ub-ver edit_box marb05">
+			<div class="ub edit_namebox">
+				<div class="ub ub-ac edit_left sc-text">手机号</div>
+				<div class="ub ub-ac ub-f1 uinput">
+					<input type="text" value="" class="Fphone" placeholder="输入手机号" />
+				</div>
+			</div>
+			<div class="ub edit_telbox">
+				<div class="ub ub-ac edit_left sc-text">验证码</div>
+				<div class="ub ub-f1 ub-ac uinput">
+					<input type="text" value="" class="Fvcode" placeholder="输入验证码" />
+				</div>
+				<div class="ub ub-ac colgloden ft09 btncheck">获取验证码</div>
+			</div>
+		</div>
+		<div class="ub btn_box">
+			<div class="ub ub-f1 ub-ac ub-pc main_btn sendbtn">
+				立即验证
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../common/js/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="../common/js/mui.min.js"></script>
+	<script type="text/javascript" src="../common/js/Fsuper.js?v=1.0"></script>
+	<script type="text/javascript">
+		$(function() {
+			// sessionStorage.setItem("sure_refresh", true);
+		});
+		var openId = localStorage.getItem("openid");
+		var wait = 60;
+		var cantag = 0;
+		var checkcode;
+		//计时器函数
+		function time(o) {
+			var tso = o;
+			if (wait == 0) {
+				o.innerHTML = "获取验证码";
+				wait = 60;
+				$(o).addClass("colgloden").removeClass("sc-text");
+				$(o).removeClass("disabled");
+			} else {
+				$(o).removeClass("colgloden").addClass("sc-text");
+				o.innerHTML = "重新发送(" + wait + ")";
+				wait--;
+				setTimeout(function() {
+					time(o)
+				}, 1000)
+			}
+		}
+		//获取验证码
+		$(".btncheck").on("click", function() {
+			var Fphone = $(".Fphone").val();
+			var regtel = checktel(Fphone);
+			var o = this;
+			if (regtel === false) {
+				mui.toast("无效的手机号");
+				return;
+			}
+			var parm = {
+				mobile: Fphone,
+				openId: openId
+			}
+			$.ajax({
+				url: api.GetCheckCode,
+				type: "GET",
+				async: false,
+				dataType: "json",
+				data: parm,
+				success: function(result) {
+					if (result.type == 1) {
+						checkcode = result.resultdata;
+						$(".btncheck").addClass("disabled");
+						mui.toast("验证码发送成功!");
+						time(o);
+
+					} else {
+						checkcode = '';
+						mui.toast("验证码发送失败!");
+					}
+				},
+				error: function() {
+					mui.toast("服务器出错!");
+				}
+			});
+		})
+
+		//绑定手机号
+		function bindphone() {
+			console.log(checkcode);
+			var Fvcode = $(".Fvcode").val();
+			var Fphone = $(".Fphone").val();
+			if (Fvcode == "") {
+				mui.toast("验证码不能为空!");
+				return;
+			}
+			if (Fvcode != checkcode) {
+				mui.toast("验证码输入错误!");
+				return;
+			}
+
+			var parm = {
+				mobile: Fphone,
+				checkCode: Fvcode
+			}
+
+			$.ajax({
+				url: api.MobileChecked,
+				type: "post",
+				async: false,
+				dataType: "json",
+				data: parm,
+				success: function(result) {
+					if (result.type == 1) {
+						mui.alert(result.message, '系统提示', function() {
+							history.back(-1);
+							localStorage.setItem("UserId", result.resultdata.UserId);
+						});
+						
+					} else {
+						mui.toast(result.message);
+					}
+				},
+				error: function() {
+					mui.toast("服务器出错!");
+				}
+			});
+
+		}
+		$(".sendbtn").on("click", function() {
+			$(this).addClass("disclick");
+			bindphone();
+		})
+	</script>
+
+</html>

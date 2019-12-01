@@ -1,0 +1,6 @@
+.chartCar-list{ padding:0.6em 0.5em 5em 0.5em}
+.chartCar-item{ background: #fff; border-radius: 5px; padding: 0.5em;  box-shadow:2px 2px 3px #aaaaaa; margin-bottom: 0.8em;}
+.order-bg{ width: 1.4em; margin-right: 0.4em;}
+.green-circle{ background: #00c3a5; width: 8px; height: 8px; border-radius: 50%;}
+.red-circle{background: #ff7a7b; width: 8px; height: 8px; border-radius: 50%;}
+.circle-line{ height: 10px; border-left: 2px solid #E1E1E1; margin-left: 3px; }

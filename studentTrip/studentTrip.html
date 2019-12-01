@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+
+	<head>
+		<title>学生出行</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link href="../common/css/mui.min.css" rel="stylesheet" />
+		<link href="../common/css/mui.picker.min.css" rel="stylesheet" />
+		<link href="../common/css/fonts/font-awesome.min.css" rel="stylesheet" />
+		<link href="../common/css/icon.css" rel="stylesheet" />
+		<link href="../common/css/ui-base.css" rel="stylesheet" />
+		<link href="../common/css/ui-box.css" rel="stylesheet" />
+		<link href="../common/css/ui-color.css" rel="stylesheet" />
+		<link href="../common/css/common.css" rel="stylesheet" />
+		<link href="../common/css/control.css" rel="stylesheet" />
+		<link href="../maincss/adduser.css" rel="stylesheet" />
+	</head>
+
+	<body class="bc-text um-vp bc-bg">
+		<div class="ub ub-ver" id="mainpage">
+			<div class="ub first-box">
+				<div class="ub ub-f1 ub-ver first-main">
+					<div class="ub  first-item">
+						<div class="ub ub-ac put-left marr1">
+							<div class="ub ub-ac fa fa-map-marker ft15 colgreen umar-r">
+							</div>
+							<div class="ub ub-ac">线路</div>
+						</div>
+						<div class="ub ub-ac ub-f1 uinput sc-text linetxt checkLine">
+							点击选择
+						</div>
+						<div class="ub ub-ac find_rightImg">
+							<img src="../common/images/icon_grayR.png" />
+						</div>
+					</div>
+					<div class="ub first-item">
+						<div class="ub ub-ac put-left">
+							乘车人数
+						</div>
+						<div class="ub ub-ac ub-f1 uinput">
+							<input type="number" placeholder="请输入乘车人数" class="StudentNum" />
+						</div>
+					</div>
+					<div class="ub first-item">
+						<div class="ub ub-ac put-left">
+							姓名
+						</div>
+						<div class="ub ub-ac ub-f1 uinput">
+							<input type="text" placeholder="请输入联系人姓名" class="TeacherName" />
+						</div>
+					</div>
+					<div class="ub first-item">
+						<div class="ub ub-ac put-left">
+							联系电话
+						</div>
+						<div class="ub ub-ac ub-f1 uinput">
+							<input type="tel" placeholder="请输入联系电话" class="TeacherPhone" />
+						</div>
+					</div>
+					<div class="ub first-item timechoose">
+						<div class="ub ub-ac put-left">
+							乘车日期
+						</div>
+						<div class="ub ub-ac ub-f1 uinput sc-text UseDate">
+							点击选择
+						</div>
+						<div class="ub ub-ac find_rightImg">
+							<img src="../common/images/icon_grayR.png" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ub btn_box">
+				<div class="ub ub-f1 ub-ac ub-pc main_btn sendbtn">
+					提交信息
+				</div>
+			</div>
+	</body>
+
+</html>
+<script src="../common/js/jquery-2.1.4.min.js"></script>
+<script src="../common/js/mui.min.js"></script>
+<script src="../common/js/mui.picker.min.js"></script>
+<script src="../common/js/Fsuper.js"></script>
+<script>
+	$(function() {
+		lineList();
+	});
+
+	var openId = localStorage.getItem("openid");
+	var UserId = localStorage.getItem("UserId");
+	var selectarry = [];
+	var lineId, lineName;
+
+	$('.timechoose').on('click', function() {
+		var timepicker = new mui.DtPicker({
+			type: 'date',
+			beginDate: new Date()
+		});
+		timepicker.show(function(item) {
+			$('.UseDate').text(item);
+			$('.UseDate').css('color', '#5d5d5d');
+		})
+	})
+
+	//查询线路列表
+	function lineList() {
+		$.ajax({
+			url: api.GetLineList,
+			type: "GET",
+			async: false,
+			dataType: "json",
+			success: function(result) {
+				if (result.type == 1) {
+					var datas = result.resultdata;
+					var length = datas.length;
+					for (var i = 0; i < length; i++) {
+						var selectitem = {};
+						selectitem.value = datas[i].Id;
+						selectitem.text = datas[i].LineName;
+						selectitem.IsOpen = datas[i].IsOpen;
+						selectitem.Price = datas[i].Price;
+						selectarry.push(selectitem);
+					}
+				} else {
+
+				}
+
+			}
+		});
+	}
+	//选择线路
+	$('.checkLine').on('click', function() {
+		var picker = new mui.PopPicker();
+		picker.setData(selectarry);
+		$('.checkLine').text('点击选择');
+		picker.show(function(item) {
+			$('.linetxt').text(item[0].text);
+			$('.linetxt').css('color', '#5d5d5d');
+			lineId = item[0].value;
+			lineName = item[0].text;
+			console.log(lineId);
+			console.log(lineName);
+		})
+	});
+	// 提交订单
+	function CreateStudentOrder() {
+		var StudentNum = $('.StudentNum').val();
+		var TeacherName = $('.TeacherName').val();
+		var TeacherPhone = $('.TeacherPhone').val();
+		var UseDate = $.trim($('.UseDate').text());
+		var linetxt =  $.trim($('.checkLine').text());
+		console.log(linetxt);
+		if(linetxt == null || linetxt == '' || linetxt == '点击选择'){
+			mui.toast('请选择乘车线路！');
+			return;
+		}
+		if(StudentNum == null || StudentNum == '' || TeacherPhone == null || TeacherPhone ==''){
+			mui.toast('请填完必填项信息！');
+			return;
+		}
+		var postdata = {
+			OpenId: openId,
+			UserId: UserId,
+			LineId: lineId,
+			LineName: lineName,
+			StudentNum: StudentNum,
+			TeacherName: TeacherName,
+			TeacherPhone: TeacherPhone,
+			UseDate: UseDate,
+		}
+		$.ajax({
+			url: api.CreateStudentOrder,
+			type: "POST",
+			async: false,
+			dataType: "json",
+			data: {
+				queryJson: JSON.stringify(postdata)
+			},
+			success: function(result) {
+				if (result.type == 1) {
+					mui.alert(result.message, '系统提示', function() {
+						mui.openWindow({
+							url: '../studentOrder/studentOrder.html'
+						});
+					});
+				} else {
+					mui.alert(result.message, '系统提示', function() {
+
+					});
+				}
+			}
+		});
+	}
+	//打开绑定手机
+	$(".sendbtn").on("click", function() {
+		CreateStudentOrder();
+	})
+</script>

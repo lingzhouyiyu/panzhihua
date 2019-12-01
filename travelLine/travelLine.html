@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+
+	<head>
+		<title>旅游套票</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link href="../common/css/mui.min.css" rel="stylesheet" />
+		<link href="../common/css/mui.picker.min.css" rel="stylesheet" />
+		<link href="../common/css/fonts/font-awesome.min.css" rel="stylesheet" />
+		<link href="../common/css/icon.css" rel="stylesheet" />
+		<link href="../common/css/ui-base.css" rel="stylesheet" />
+		<link href="../common/css/ui-box.css" rel="stylesheet" />
+		<link href="../common/css/ui-color.css" rel="stylesheet" />
+		<link href="../common/css/common.css" rel="stylesheet" />
+		<link href="../common/css/control.css" rel="stylesheet" />
+		<link href="../maincss/travel.css?v=1.0.1" rel="stylesheet" />
+		<script src="../common/js/jquery-2.1.4.min.js"></script>
+		<script src="../common/js/mui.min.js"></script>
+		<script>
+			var Serverurl = "https://www.pzhyy360.com";
+			var chatState, chatAppId, chatAppSecret, chatcode, sendstate, openid,UserId,CheckStatus;
+			(function($) {
+				$.getUrlParam = function(name) {
+					var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+					var r = window.location.search.substr(1).match(reg);
+					if(r != null) return unescape(r[2]);
+					return null;
+				}
+			})(jQuery);
+			chatcode = $.getUrlParam('code');
+			sendstate = $.getUrlParam("state");
+			// checkcode();
+			function checkcode() {
+				if(chatcode == null || chatcode == "") {
+					getOauth();
+		
+				} else {
+					sendcode();
+				}
+			}
+		
+			//微信授权
+			function getOauth() {
+				
+				var furl = "/YunSPOrderManage/AboutClassAPI/GetOauth";
+				// var pagename = data;
+				$.ajax({
+					url: Serverurl + furl,
+					type: "get",
+					async: false,
+					dataType: "json",
+					success: function(result) {
+						chatState = result.resultdata.State;
+						chatAppId = result.resultdata.AppId;
+						chatAppSecret = result.resultdata.AppSecret;
+						window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + chatAppId +
+							'&redirect_uri=https://www.pzhyy360.com/WapWX/web/travelLine/travelLine.html&response_type=code&scope=snsapi_base&state=' +
+							chatState + '#wechat_redirect&AppSecret=' + chatAppSecret;
+		
+					}
+				});
+			}
+		
+			//微信授权
+			function sendcode() {
+				
+				var furl = "/YunSPOrderManage/AboutClassAPI/OauthOpenid";
+				var queryJson = {
+					state: sendstate,
+					code: chatcode
+				}
+				$.ajax({
+					url: Serverurl + furl,
+					type: "get",
+					async: false,
+					dataType: "json",
+					data: queryJson,
+					success: function(result) {
+						var message = JSON.stringify(result.resultdata);
+						openid = result.resultdata.OpenId;
+						UserId = result.resultdata.UserId;
+						CheckStatus = result.resultdata.CheckStatus;
+						if(openid == null || openid == "") {
+							getOauth("index");
+						}
+						
+						localStorage.setItem("openid", openid);
+						localStorage.setItem("UserId", UserId);
+						checkPhone();
+					}
+				});
+			}
+			//检查是否绑定手机号
+			function checkPhone(){
+				if(!CheckStatus) {
+					mui.openWindow({
+					url: '../bindtel/bindtel.html'
+					});
+					
+				}
+			}
+		</script>
+	</head>
+
+	<body class="bc-text um-vp bc-bg">
+		<div class="ub ub-ver travelLine-list">
+		
+			
+		</div>
+		<div class="traveltemp dhide">
+			<div class="ub travelLine-item">
+				<div class="ub ub-ac product-leftimg">
+					<img class="ub ub-img product-img PlanImg" src="../common/images/product.jpg" />
+				</div>
+				<div class="ub ub-f1 ub-ver">
+					<div class="ub PlanName txthide2">
+						
+					</div>
+					<div class="ub ub-ac ub-f1 ub-ae">
+						<div class="ub ub-ac colred">
+							<span class="ft09">￥</span>
+							<span class="ft15 PresentPrice">0</span>
+						</div>
+						<div class="ub ub-ac ft09 sc-price">
+							<span>￥</span>
+							<span class="OriginalPrice">0</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+
+</html>
+
+<script src="../common/js/mui.picker.min.js"></script>
+<script src="../common/js/Fsuper.js"></script>
+<script>
+	$(function() {
+		travelLine();
+	});
+
+	var openId = localStorage.getItem("openid");
+	//加载线路列表
+	function travelLine() {
+		
+		$.ajax({
+			url: api.travelLine,
+			type: "GET",
+			async: false,
+			dataType: "json",
+			success: function(result) {
+				var datas = result.resultdata;
+				var length = datas.length;
+				if (length > 0) {
+					for (var i = 0; i < length; i++) {
+						additem(datas[i]);
+					}
+				} else {
+					$(".orderwarm").removeClass("dhide");
+				}
+			},
+			error: function() {
+				mui.toast("网络错误");
+				$(".orderwarm").removeClass("dhide");
+			}
+		});
+	}
+	
+	function additem(data) {
+		var list = $(".travelLine-list");
+		var PlanImg = data.PlanImg;
+		var item = $(".traveltemp .travelLine-item").clone();
+		var AuditStatus = data.AuditStatus;
+		item.attr("id", data.Id);
+		item.find(".PlanName").text(data.PlanName);
+		item.find(".PresentPrice").text(data.PresentPrice);
+		item.find(".OriginalPrice").text(data.OriginalPrice);
+		item.find(".PayPrice").text(data.PayPrice);
+		item.find(".PlanImg").attr("src", Serverurl+PlanImg);
+		item.attr('onclick', "travelLineDetail(this)");
+		
+		list.append(item);
+	}
+	
+	//打开详情
+	function  travelLineDetail(dom){
+		var travelLineid = $(dom).attr("id");
+		localStorage.setItem("travelLineid", travelLineid);
+		mui.openWindow({
+			url: '../travelLineDetail/travelLineDetail.html'
+		});
+	}
+</script>

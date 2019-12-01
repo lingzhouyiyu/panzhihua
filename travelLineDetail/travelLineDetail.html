@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+
+	<head>
+		<title>旅游套票详情</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link href="../common/css/mui.min.css" rel="stylesheet" />
+		<link href="../common/css/fonts/font-awesome.min.css" rel="stylesheet" />
+		<link href="../common/css/swiper.min.css" rel="stylesheet" />
+		<link href="../common/css/icon.css" rel="stylesheet" />
+		<link href="../common/css/ui-base.css" rel="stylesheet" />
+		<link href="../common/css/ui-box.css" rel="stylesheet" />
+		<link href="../common/css/ui-color.css" rel="stylesheet" />
+		<link href="../common/css/common.css" rel="stylesheet" />
+		<link href="../common/css/control.css" rel="stylesheet" />
+		<link href="../maincss/travel.css?v=1.01" rel="stylesheet" />
+	</head>
+
+	<body class="bc-text um-vp bc-bg">
+		<div class="flash">
+			<div class="swiper-container ub ub-f1">
+				<div class="ub ub-ac swiper-wrapper" style="height: auto !important;">
+
+					<!-- <div class="swiper-slide" style="height: auto !important;">
+						<div class="flash_img">
+							<img class="ub-img" src="../common/images/product.jpg" />
+						</div>
+					</div> -->
+				</div>
+			</div>
+		</div>
+		<div class="ub ub-ver detail-box">
+			<div class="ub ub-ac subDetail">
+				<div class="ub ub-f1 ub-ver">
+					<div class="ub ub-ac PlanName">
+
+					</div>
+					<div class="ub ub-ac subdetail-price">
+						<div class="ub ub-f1">
+							<div class="ub ub-ac colred">
+								<span class="ft09">￥</span>
+								<span class="ft15 PresentPrice">0</span>
+							</div>
+							<div class="ub ub-ae sc-price">
+								<span>￥</span>
+								<span class="OriginalPrice">0</span>
+							</div>
+						</div>
+						<div class="ub ub-ac sc-text"></div>
+					</div>
+				</div>
+			</div>
+			<div class="ub ub-ver lingdetai-count">
+				<div class="ub ub-ac">
+					<div class="ub ub-ac left-line"></div>
+					<div class="ub ub-ac">行程详情</div>
+				</div>
+				<div class="recomend PlanDetails">
+
+				</div>
+			</div>
+		</div>
+		<div class="ub ub-ac buyfooter">
+			<a href="tel:" class="ub ub-ac ub-pc ub-ver ub-f1 ConsultationPhone">
+				<div class="ub ub-ac">
+					<img class="ub tel-img" src="../common/images/tel-bg.png" />
+				</div>
+				<div class="ub sc-text ft085">咨询</div>
+			</a>
+			<div class="ub ub-f1 ub-pc ub-ac buybtn">立即预订</div>
+		</div>
+	</body>
+
+</html>
+<script src="../common/js/jquery-2.1.4.min.js"></script>
+<script src="../common/js/swiper.min.js"></script>
+<script src="../common/js/mui.min.js"></script>
+<script src="../common/js/Fsuper.js"></script>
+<script>
+	$(function() {
+		//幻灯片
+		travelLineDetail();
+		
+	});
+
+	var openId = localStorage.getItem("openid");
+	var travelLineid = localStorage.getItem("travelLineid");
+	function travelLineDetail() {
+		var parm = {
+			planId: travelLineid
+		}
+		$.ajax({
+			url: api.travelLineDetail,
+			type: "GET",
+			async: false,
+			dataType: "json",
+			data: parm,
+			success: function(result) {
+				var datas = result.resultdata;
+				var bannerlist = datas.PlanEnclosure;
+				var length = bannerlist.length;
+				$(".PlanName").text(datas.PlanName);
+				$(".PresentPrice").text(datas.PresentPrice);
+				$(".OriginalPrice").text(datas.OriginalPrice);
+				$(".PayPrice").text(datas.PayPrice);
+				$(".PlanDetails").html(datas.PlanDetails);
+				$('.ConsultationPhone').attr("href", "tel:" + datas.ConsultationPhone);
+
+				if (length > 0) {
+					for (var i = 0; i < length; i++) {
+						var src = Serverurl + bannerlist[i].ImgUrl;
+						img =
+							"<div class='swiper-slide' style='height: auto !important;'><div class='flash_img'><img class='ub-img' src=" +
+							src + " /></div></div>"
+						$(".swiper-wrapper").append(img);
+					}
+					var swiper = new Swiper('.swiper-container', {
+						loop: true,
+						grabCursor: true,
+						paginationClickable: true,
+						autoplay: 5000,
+					});
+				} else {
+
+				}
+			},
+			error: function() {
+
+			}
+		});
+	}
+
+
+	//打开详情
+	$(".buybtn").on("click", function() {
+		mui.openWindow({
+			url: '../travelMakerOrder/travelMakerOrder.html?v=1.0'
+		});
+	})
+</script>

@@ -1,0 +1,35 @@
+.first-box{ padding: 1em 0.5em 0.6em 0.5em;}
+.second-box{padding: 0 0.5em; }
+.first-main{ background: #fff; border-radius: 8px; }
+.first-item{ padding: 0 0.5em; height: 2.8em; border-bottom: 1px solid #EFEFEF;}
+.put-left{ margin-right: 1em;}
+.find_rightImg img{ width: 0.45em;}
+.btn_box{ padding: 2.5em 1.5em;}
+.main_btn{ background:#028bfd url(../common/images/btn-bg.jpg) repeat-y; height: 2.8em; border-radius: 5px; color: #fff; background-size: 100% 100%;}
+
+.bind_warn{ padding:1.5em 0.6em 0.4em 0.6em;}
+.bindwarn_img img{ width: 1.1em;}
+
+.health-main{ line-height: 24px; margin-bottom: 0.5em;}
+.add-header{ width: 60px; height:60px; font-size: 30px; border: 1px solid #E1E1E1;}
+.add-header img{ width: 1.2em;}
+.header-main{ padding: 0.6em; background: #fff; border-radius: 5px;}
+.imgShow{ margin-left: 1em;  width: 60px; height:60px; font-size: 30px;}
+.imgShow img{ width: 100%; height: 100%;}
+.third-main{ margin-bottom: 0.5em;}
+#uploadImg{ display: block; width: 60px; height:60px;}
+
+/*搜索*/
+.wrap-search{ background: #fff;}
+.search_box{ border: 1px solid #e1e1e1; border-radius: 3em; margin: 0.6em; background: #fff; }
+.ele_search{margin:3px 0;border-radius:3em;background:#fff;}
+.ele_put{background:#fff url(../common/images/ele-seach.png) no-repeat;background-position:.5em;background-size:1em 1em;}
+.ele_img img{width:1em;}
+.subtop{position:fixed;top:0;left:0;z-index:999;width:100%; background: #fff; padding: 0.8em 0.6em 0 0.6em; height: 5.4em; overflow: hidden; border-bottom: 1px solid #efefef;}
+uinput{padding:0;}
+.uinput input.ulev-ele{padding-left:2.5em;outline:0 none;color:rgba(0,0,0,.4);font-size:.9em;}
+
+.filter_box{ position: fixed; left: 0; top: 0; background: #f2f4f7; width: 100%; bottom: 0; z-index: 999; overflow-y:scroll; overflow-x:hidden;}
+.filter_main{ width: 100%; height: auto; overflow: auto; }
+.companylist{ padding: 0.6em 0; overflow: auto;}
+.company-item{ background: #fff; padding: 0.8em 0.6em; margin-bottom: 1px;}
